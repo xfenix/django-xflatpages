@@ -10,10 +10,10 @@ from cache_utils.decorators import cached
 
 
 FLATPAGE_TPL_DIR = getattr(settings, 'FLATPAGE_TPL_DIR', 'flatpages')
-FLATPAGE_DEFAULT_TPL = getattr(settings, 'FLATPAGE_DEFAULT_TPL', 'default') 
+FLATPAGE_DEFAULT_TPL = getattr(settings, 'FLATPAGE_DEFAULT_TPL', 'default')
 
 
-@cached(86400)
+#@cached(86400)
 def get_avail_tpls():
     """ Scan flatpages directory in template folder
     then return list of all available templates
@@ -60,7 +60,9 @@ class FlatPage(models.Model):
         u'Шаблон', max_length=255,
         help_text=u'Выберите из списка доступных шаблонов (директория /templates/%s/)' % FLATPAGE_TPL_DIR,
         choices=get_avail_tpls(),
-        default=dict(get_avail_tpls())[FLATPAGE_DEFAULT_TPL],
+        default=getattr(
+            dict(get_avail_tpls()), FLATPAGE_DEFAULT_TPL, None
+        ),
     )
 
     def get_template(self, default=False):
